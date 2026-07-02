@@ -1,0 +1,10 @@
+
+#help-topic-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+#help-topic-parent,
+#help-topic-child {
+    width: 50%;
+}
