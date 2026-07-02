@@ -15,5 +15,4 @@ modifique los archivos de header.inc.php en las carpetas */include/client* e */i
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/css/help-topic-split.css" media="screen"/>
 <!--JS plugin-->
     <script type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></script>
-``
 ---
