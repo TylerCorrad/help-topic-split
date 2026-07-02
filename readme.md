@@ -9,8 +9,8 @@ Para implementar este plugin siga los siguientes pasos:
 descargue este proyecto y muevalo a la carpeta /include/plugins dentro de su instancia de osTicket
 
 ### Paso 2:
-modifique los archivos de header.inc.php en las carpetas */include/client* e */include/staff/* colocando las siguientes lineas dentro del  <head> de ambos archivos:
-``
+modifique los archivos de header.inc.php en las carpetas */include/client* e */include/staff/* colocando las siguientes lineas dentro del **head** de ambos archivos:
+
 <!--CSS plugin-->
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/css/help-topic-split.css" media="screen"/>
 <!--JS plugin-->
