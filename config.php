@@ -14,12 +14,6 @@ class HelpTopicSplitConfig extends PluginConfig {
                 'default' => true,
                 'hint' => 'Habilita el segundo dropdown'
             ]),
-
-            'enable_responsive' => new BooleanField([
-                'label' => 'Activar diseño responsive',
-                'default' => true,
-                'hint' => 'Aplica ajustes móviles al formulario'
-            ])
         ];
     }
 }

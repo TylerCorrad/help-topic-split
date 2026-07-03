@@ -1,18 +1,32 @@
 # Plugin: help-topic-split
-Este plugin para osTicket tiene como objetivo dividir el menú desplegable de selección de temas de ayuda en 2: Uno para categorias de primer nivel y otro para subcategorias. Esto permite al usuario visualizar de mejor manera los temas de ayuda y evita congestión visual.
+Este plugin para osTicket tiene como objetivo dividir el menú desplegable de selección de temas de ayuda en 2: Uno para categorias de primer nivel y otro para subcategorias. Esto permite al usuario visualizar de mejor manera los temas de ayuda y evita congestión visual. 
+El plugin inyecta código css y JavaScript a las plantillas php del sistema, por lo que requiere modificar el core del mismo de manera mínima.
 
 ---
-## Instalación
-Para implementar este plugin siga los siguientes pasos:
+
+
+## Compatibilidad
+Este plugin es compátible con la versión 1.18 de osTicket, si va a implementarlo en otras versiones hagalo con precaución.
+
+## Instalación 
+Para implementar este plugin en su instancia de osTicket siga los siguientes pasos:
 
 ### Paso 1:
 descargue este proyecto y muevalo a la carpeta /include/plugins dentro de su instancia de osTicket
 
-### Paso 2:
-modifique los archivos de header.inc.php en las carpetas */include/client* e */include/staff/* colocando las siguientes lineas dentro del **head** de ambos archivos:
+### Paso 2
+Ubique la carpeta del proyecto en el directorio /inlude/plugins de su instancia de osTicket.
+
+### Paso 3
+Modifique el archivo **header.inc.php** en las carpetas */include/client/* e */include/staff/* y agregue las siguientes lineas dentro de la etiqueta *head*.
 
 <!--CSS plugin-->
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/css/help-topic-split.css" media="screen"/>
 <!--JS plugin-->
     <script type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></script>
 ---
+### Paso 4
+En el panel de administrador de osTicket vaya al apartado **Administrar>Plugins** y haga click sobre *"Añadir nuevo Plugin"*.
+
+### Paso 5
+Seleccione el plugin llamado *"help topic split"*. No importa si lo habilita o no.

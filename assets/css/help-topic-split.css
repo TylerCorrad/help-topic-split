@@ -8,3 +8,16 @@
 #help-topic-child {
     width: 50%;
 }
+
+@media screen and (max-width: 768px) {
+    #help-topic-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #help-topic-parent,
+    #help-topic-child {
+        width: 100% !important;
+    }
+}
