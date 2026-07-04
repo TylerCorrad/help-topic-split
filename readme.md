@@ -4,10 +4,10 @@ El plugin inyecta código css y JavaScript a las plantillas php del sistema, por
 
 ---
 
-
 ## Compatibilidad
 Este plugin es compátible con la versión 1.18 de osTicket, si va a implementarlo en otras versiones hagalo con precaución.
 
+---
 ## Instalación 
 Para implementar este plugin en su instancia de osTicket siga los siguientes pasos:
 
@@ -23,10 +23,9 @@ Modifique el archivo **header.inc.php** en las carpetas */include/client/* e */i
 <!--CSS plugin-->
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/css/help-topic-split.css" media="screen"/>
 <!--JS plugin-->
-    <script type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></script>
----
+    <scrip type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></scrip
 ### Paso 4
 En el panel de administrador de osTicket vaya al apartado **Administrar>Plugins** y haga click sobre *"Añadir nuevo Plugin"*.
 
 ### Paso 5
-Seleccione el plugin llamado *"help topic split"*. No importa si lo habilita o no.
+Seleccione el plugin llamado *"help topic split"*. El plugin estará habilitado de manera inmediata, no importa si lo habilita o no.
