@@ -12,20 +12,14 @@ Este plugin es compátible con la versión 1.18 de osTicket, si va a implementar
 Para implementar este plugin en su instancia de osTicket siga los siguientes pasos:
 
 ### Paso 1:
-descargue este proyecto y muevalo a la carpeta /include/plugins dentro de su instancia de osTicket
-
+descargue este proyecto y muevalo a la carpeta */include/plugins* dentro de su instancia de osTicket
 ### Paso 2
-Ubique la carpeta del proyecto en el directorio /inlude/plugins de su instancia de osTicket.
-
-### Paso 3
 Modifique el archivo **header.inc.php** en las carpetas */include/client/* e */include/staff/* y agregue las siguientes lineas dentro de la etiqueta *head*.
-
 <!--CSS plugin-->
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/css/help-topic-split.css" media="screen"/>
 <!--JS plugin-->
     <scrip type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></scrip
-### Paso 4
+### Paso 3
 En el panel de administrador de osTicket vaya al apartado **Administrar>Plugins** y haga click sobre *"Añadir nuevo Plugin"*.
-
-### Paso 5
+### Paso 4
 Seleccione el plugin llamado *"help topic split"*. El plugin estará habilitado de manera inmediata, no importa si lo habilita o no.
