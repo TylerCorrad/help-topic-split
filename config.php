@@ -13,6 +13,7 @@ class HelpTopicSplitPluginConfig extends PluginConfig {
             'enable_plugin' => new BooleanField(array(
                 'label'     => ('activar división de temas de ayuda'),
                 'default' => true,
+<<<<<<< HEAD
             ))
         );
     }
@@ -27,5 +28,10 @@ class HelpTopicSplitPluginConfig extends PluginConfig {
         HelpTopicSplitPlugin::patchHeaders($config);
 
         return true;
+=======
+                'hint' => 'Habilita el segundo dropdown'
+            ]),
+        ];
+>>>>>>> 8287adc18efda9f0f315e667eaa10dc0d11d459f
     }
 }
