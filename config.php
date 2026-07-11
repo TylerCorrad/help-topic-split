@@ -2,8 +2,10 @@
 require_once INCLUDE_DIR . 'class.plugin.php';
 require_once dirname(__FILE__) . '/class.HelpTopicSplitPlugin.php';
 
+define('HELP_TOPIC_SPLIT_LOG_DIR', sys_get_temp_dir());
+
 file_put_contents(
-    '/tmp/help-topic-config.log',
+    HELP_TOPIC_SPLIT_LOG_DIR . '/help-topic-config.log',
     "config.php cargado\n",
     FILE_APPEND);
 class HelpTopicSplitPluginConfig extends PluginConfig {
@@ -13,14 +15,14 @@ class HelpTopicSplitPluginConfig extends PluginConfig {
             'enable_plugin' => new BooleanField(array(
                 'label'     => ('activar división de temas de ayuda'),
                 'default' => true,
-<<<<<<< HEAD
             ))
         );
     }
 
 
     function pre_save(&$config, &$errors) {
-        file_put_contents('/tmp/help-topic.log',
+        file_put_contents(
+            HELP_TOPIC_SPLIT_LOG_DIR . '/help-topic.log',
             date('Y-m-d H:i:s') . " pre_save ejecutado\n",
             FILE_APPEND
         );
@@ -28,10 +30,5 @@ class HelpTopicSplitPluginConfig extends PluginConfig {
         HelpTopicSplitPlugin::patchHeaders($config);
 
         return true;
-=======
-                'hint' => 'Habilita el segundo dropdown'
-            ]),
-        ];
->>>>>>> 8287adc18efda9f0f315e667eaa10dc0d11d459f
     }
 }
