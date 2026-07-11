@@ -46,129 +46,152 @@ function buildHierarchy(topics) {
 
 async function getTopics() {
 
-    const response = await fetch(
-        '/upload/include/plugins/help-topic-split/ajax/topics.php'
-    );
+    const script = document.currentScript ||
+        document.querySelector('script[src*="help-topic-split.js"]');
 
-    return await response.json();
+    const url = script && script.src
+        ? new URL('../../ajax/topics.php', script.src).href
+        : new URL('ajax/topics.php', window.location.href).href;
+
+    try {
+        const response = await fetch(url, { credentials: 'same-origin' });
+
+        if (!response.ok) {
+            throw new Error('No se pudieron cargar los temas: ' + response.status);
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error('HelpTopicSplit: error cargando temas', err);
+        return null;
+    }
 }
 
 async function initializeHelpTopicSplit() {
 
     const topics = await getTopics();
+    if (!topics || typeof topics !== 'object' || !Object.keys(topics).length) {
+        console.warn('HelpTopicSplit: no se obtuvo una lista de temas válida, manteniendo el selector original.');
+        return;
+    }
+
     const { parents, children } = buildHierarchy(topics);
 
     const topicSelect = document.querySelector('select[name="topicId"]');
 
-        if (!topicSelect) {
-            console.log("No se encontró topicId");
-            return;
-        }
+    if (!topicSelect) {
+        console.warn('HelpTopicSplit: no se encontró topicId');
+        return;
+    }
 
-        console.log("TopicId encontrado");
+    const originalValue = topicSelect.value;
 
-        // Ocultar selector original
-        topicSelect.style.display = "none";
+    // Crear selector de temas principales
+    const parentSelect = document.createElement("select");
+    parentSelect.id = "help-topic-parent";
+    parentSelect.style.width = "50%";
+    parentSelect.style.marginBottom = "10px";
 
-        // Crear selector de temas principales
-        const parentSelect = document.createElement("select");
-        parentSelect.id = "help-topic-parent";
-        parentSelect.style.width = "50%";
-        parentSelect.style.marginBottom = "10px";
+    parentSelect.appendChild(
+        new Option("Seleccione un tema", "")
+    );
 
+    // Crear selector de subtemas
+    const childSelect = document.createElement("select");
+    childSelect.id = "help-topic-child";
+    childSelect.style.width = "50%";
+    childSelect.style.marginBottom = "10px";
+
+    childSelect.appendChild(
+        new Option("Seleccione un subtema", "")
+    );
+
+    if (document.getElementById("help-topic-wrapper")) {
+        return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.id = "help-topic-wrapper";
+
+    wrapper.appendChild(parentSelect);
+    wrapper.appendChild(childSelect);
+
+    const container = topicSelect.parentNode;
+    container.appendChild(wrapper);
+
+    // Llenar temas principales desde la jerarquía real
+    Object.entries(parents).forEach(([id, topic]) => {
         parentSelect.appendChild(
-            new Option("Seleccione un tema", "")
+            new Option(topic.topic, id)
         );
+    });
 
-        // Crear selector de subtemas
-        const childSelect = document.createElement("select");
-        childSelect.id = "help-topic-child";
-        childSelect.style.width = "50%";
-        childSelect.style.marginBottom = "10px";
-
+    const resetChildSelect = () => {
+        childSelect.innerHTML = "";
         childSelect.appendChild(
             new Option("Seleccione un subtema", "")
         );
-
-        // Insertar controles
-        
-        if (document.getElementById("help-topic-wrapper"))
-            return;
-
-        const wrapper = document.createElement("div");
-        wrapper.id = "help-topic-wrapper";
-
-        wrapper.appendChild(parentSelect);
-        wrapper.appendChild(childSelect);
-        
-        const container = topicSelect.parentNode;
-
-        container.appendChild(wrapper);
-
-
-        // Llenar temas principales desde la jerarquía real
-        Object.entries(parents).forEach(([id, topic]) => {
-
-            parentSelect.appendChild(
-                new Option(
-                    topic.topic,
-                    id
-                )
-            );
-
-        });
-
-
-        // Cambio de tema principal
-        parentSelect.addEventListener("change", function () {
-
-            childSelect.innerHTML = "";
-
-            childSelect.appendChild(
-                new Option("Seleccione un subtema", "")
-            );
-            
-            const childTopics =
-                children[this.value] || [];
-
-            childTopics.forEach(child => {
-
-
-                childSelect.appendChild(
-                    new Option(
-                        child.name,
-                        child.id
-                    )
-                );
-            });
-
-        });
-
-        // Cambio de subtema
-        childSelect.addEventListener("change", function () {
-
-            if (!this.value)
-                return;
-
-            topicSelect.value = this.value;
-
-            // Mantener comportamiento AJAX original
-            if (window.jQuery) {
-                window.jQuery(topicSelect).trigger("change");
-            } else {
-                topicSelect.dispatchEvent(
-                    new Event("change")
-                );
-            }
-
-            console.log(
-                "Subtema seleccionado:",
-                this.value
-            );
-
-        });
-
     };
+
+    const syncOriginalSelect = (value) => {
+        topicSelect.value = value || "";
+
+        if (window.jQuery) {
+            window.jQuery(topicSelect).trigger("change");
+        } else {
+            topicSelect.dispatchEvent(new Event("change"));
+        }
+    };
+
+    const populateChildSelect = (parentId) => {
+        resetChildSelect();
+
+        const childTopics = children[parentId] || [];
+        childTopics.forEach(child => {
+            childSelect.appendChild(
+                new Option(child.name, child.id)
+            );
+        });
+    };
+
+    parentSelect.addEventListener("change", function () {
+        if (!this.value) {
+            resetChildSelect();
+            syncOriginalSelect("");
+            return;
+        }
+
+        populateChildSelect(this.value);
+        syncOriginalSelect("");
+    });
+
+    childSelect.addEventListener("change", function () {
+        syncOriginalSelect(this.value);
+
+        if (!this.value) {
+            console.info('HelpTopicSplit: subtema deseleccionado, campo original reiniciado.');
+            return;
+        }
+
+        console.log("Subtema seleccionado:", this.value);
+    });
+
+    // Seleccionar valores iniciales si hay uno presente
+    if (originalValue) {
+        const currentParent = Object.keys(children).find(parentId =>
+            children[parentId].some(child => child.id === originalValue)
+        );
+
+        if (currentParent) {
+            parentSelect.value = currentParent;
+            populateChildSelect(currentParent);
+            childSelect.value = originalValue;
+        }
+    }
+
+    // Ocultar selector original solo después de preparar los nuevos controles.
+    topicSelect.style.display = "none";
+};
 window.addEventListener("load", function () {
     initializeHelpTopicSplit();
 });

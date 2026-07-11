@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once '/var/www/html/upload/main.inc.php';
+require_once dirname(__DIR__, 3) . '/main.inc.php';
 
 header('Content-Type: application/json');
 

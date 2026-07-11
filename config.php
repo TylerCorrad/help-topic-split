@@ -1,25 +1,31 @@
 <?php
 require_once INCLUDE_DIR . 'class.plugin.php';
+require_once dirname(__FILE__) . '/class.HelpTopicSplitPlugin.php';
 
-class HelpTopicSplitConfig extends PluginConfig {
+file_put_contents(
+    '/tmp/help-topic-config.log',
+    "config.php cargado\n",
+    FILE_APPEND);
+class HelpTopicSplitPluginConfig extends PluginConfig {
 
     function getOptions() {
-        return [
-            'general' => new SectionBreakField([
-                'label' => 'Configuración general'
-            ]),
-
-            'enable_subtopics' => new BooleanField([
-                'label' => 'Activar subcategorías',
+        return array(
+            'enable_plugin' => new BooleanField(array(
+                'label'     => ('activar división de temas de ayuda'),
                 'default' => true,
-                'hint' => 'Habilita el segundo dropdown'
-            ]),
+            ))
+        );
+    }
 
-            'enable_responsive' => new BooleanField([
-                'label' => 'Activar diseño responsive',
-                'default' => true,
-                'hint' => 'Aplica ajustes móviles al formulario'
-            ])
-        ];
+
+    function pre_save(&$config, &$errors) {
+        file_put_contents('/tmp/help-topic.log',
+            date('Y-m-d H:i:s') . " pre_save ejecutado\n",
+            FILE_APPEND
+        );
+
+        HelpTopicSplitPlugin::patchHeaders($config);
+
+        return true;
     }
 }

@@ -1,7 +1,15 @@
 # Plugin: help-topic-split
-Este plugin para osTicket tiene como objetivo dividir el menú desplegable de selección de temas de ayuda en 2: Uno para categorias de primer nivel y otro para subcategorias. Esto permite al usuario visualizar de mejor manera los temas de ayuda y evita congestión visual.
+Este plugin para osTicket tiene como objetivo dividir el menú desplegable de selección de temas de ayuda en 2: Uno para categorias de primer nivel y otro para subcategorias. Esto permite al usuario visualizar de mejor manera los temas de ayuda y evita congestión visual. 
+El plugin inyecta código css y JavaScript a las plantillas php del sistema, por lo que requiere modificar el core del mismo de manera mínima.
 
 ---
+
+
+## Compatibilidad
+Este plugin es compátible con la versión 1.18 de osTicket, si va a implementarlo en otras verciones tenga precaución.
+
+---
+
 ## Instalación
 Para implementar este plugin siga los siguientes pasos:
 
@@ -16,3 +24,5 @@ modifique los archivos de header.inc.php en las carpetas */include/client* e */i
 <!--JS plugin-->
     <script type= "text/javascript" src="<?php echo ROOT_PATH; ?>include/plugins/help-topic-split/assets/js/help-topic-split.js"></script>
 ---
+### Paso 3:
+Esto hará que el plugin quede conectado directamente a los archivos del sistema, por lo que no requiere configuración mayor. Si desea que el plugin deje de funcionar, simplemente elimine las lineas antreriormente agregadas del código fuente
