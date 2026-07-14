@@ -154,41 +154,48 @@ async function initializeHelpTopicSplit() {
         });
     };
 
-    parentSelect.addEventListener("change", function () {
-        if (!this.value) {
-            resetChildSelect();
-            syncOriginalSelect("");
-            return;
-        }
-
-        populateChildSelect(this.value);
+parentSelect.addEventListener("change", function () {
+    if (!this.value) {
+        resetChildSelect();
         syncOriginalSelect("");
-    });
+        return;
+    }
 
-    childSelect.addEventListener("change", function () {
-        syncOriginalSelect(this.value);
+    populateChildSelect(this.value);
 
-        if (!this.value) {
-            console.info('HelpTopicSplit: subtema deseleccionado, campo original reiniciado.');
-            return;
-        }
+    // El tema padre ya es una selección válida por sí sola:
+    // dispara su cuestionario correspondiente de inmediato.
+    syncOriginalSelect(this.value);
+});
 
-        console.log("Subtema seleccionado:", this.value);
+childSelect.addEventListener("change", function () {
+    if (!this.value) {
+        // Sin subtema elegido, se vuelve a usar el tema padre
+        console.info('HelpTopicSplit: subtema deseleccionado, volviendo al tema padre.');
+        syncOriginalSelect(parentSelect.value);
+        return;
+    }
+
+    syncOriginalSelect(this.value);
+    console.log("Subtema seleccionado:", this.value);
     });
 
     // Seleccionar valores iniciales si hay uno presente
     if (originalValue) {
-        const currentParent = Object.keys(children).find(parentId =>
-            children[parentId].some(child => child.id === originalValue)
-        );
+    const currentParent = Object.keys(children).find(parentId =>
+        children[parentId].some(child => child.id === originalValue)
+    );
 
-        if (currentParent) {
-            parentSelect.value = currentParent;
-            populateChildSelect(currentParent);
-            childSelect.value = originalValue;
-        }
+    if (currentParent) {
+        parentSelect.value = currentParent;
+        populateChildSelect(currentParent);
+        childSelect.value = originalValue;
+    } else if (parents[originalValue]) {
+        // El valor original es el tema padre mismo
+        parentSelect.value = originalValue;
+        populateChildSelect(originalValue);
     }
-
+}
     // Ocultar selector original solo después de preparar los nuevos controles.
     topicSelect.style.display = "none";
 };
