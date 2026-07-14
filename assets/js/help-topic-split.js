@@ -46,84 +46,76 @@ function buildHierarchy(topics) {
 
 async function getTopics() {
 
-    const script = document.currentScript ||
-        document.querySelector('script[src*="help-topic-split.js"]');
+    const response = await fetch(
+        '/upload/include/plugins/help-topic-split/ajax/topics.php'
+    );
 
-    const url = script && script.src
-        ? new URL('../../ajax/topics.php', script.src).href
-        : new URL('ajax/topics.php', window.location.href).href;
-
-    try {
-        const response = await fetch(url, { credentials: 'same-origin' });
-
-        if (!response.ok) {
-            throw new Error('No se pudieron cargar los temas: ' + response.status);
-        }
-
-        return await response.json();
-    } catch (err) {
-        console.error('HelpTopicSplit: error cargando temas', err);
-        return null;
-    }
+    return await response.json();
 }
 async function initializeHelpTopicSplit() {
 
     const topics = await getTopics();
-    if (!topics || typeof topics !== 'object' || !Object.keys(topics).length) {
-        console.warn('HelpTopicSplit: no se obtuvo una lista de temas válida, manteniendo el selector original.');
-        return;
-    }
-
     const { parents, children } = buildHierarchy(topics);
 
     const topicSelect = document.querySelector('select[name="topicId"]');
 
-    if (!topicSelect) {
-        console.warn('HelpTopicSplit: no se encontró topicId');
-        return;
-    }
+        if (!topicSelect) {
+            console.log("No se encontró topicId");
+            return;
+        }
 
-    const originalValue = topicSelect.value;
+        console.log("TopicId encontrado");
 
-    // Crear selector de temas principales
-    const parentSelect = document.createElement("select");
-    parentSelect.id = "help-topic-parent";
-    parentSelect.style.width = "50%";
-    parentSelect.style.marginBottom = "10px";
+        // Ocultar selector original
+        topicSelect.style.display = "none";
 
-    parentSelect.appendChild(
-        new Option("Seleccione un tema", "")
-    );
+        // Crear selector de temas principales
+        const parentSelect = document.createElement("select");
+        parentSelect.id = "help-topic-parent";
+        parentSelect.style.width = "50%";
+        parentSelect.style.marginBottom = "10px";
 
-    // Crear selector de subtemas
-    const childSelect = document.createElement("select");
-    childSelect.id = "help-topic-child";
-    childSelect.style.width = "50%";
-    childSelect.style.marginBottom = "10px";
-
-    childSelect.appendChild(
-        new Option("Seleccione un subtema", "")
-    );
-
-    if (document.getElementById("help-topic-wrapper")) {
-        return;
-    }
-
-    const wrapper = document.createElement("div");
-    wrapper.id = "help-topic-wrapper";
-
-    wrapper.appendChild(parentSelect);
-    wrapper.appendChild(childSelect);
-
-    const container = topicSelect.parentNode;
-    container.appendChild(wrapper);
-
-    // Llenar temas principales desde la jerarquía real
-    Object.entries(parents).forEach(([id, topic]) => {
         parentSelect.appendChild(
-            new Option(topic.topic, id)
+            new Option("Seleccione un tema", "")
         );
-    });
+
+        // Crear selector de subtemas
+        const childSelect = document.createElement("select");
+        childSelect.id = "help-topic-child";
+        childSelect.style.width = "50%";
+        childSelect.style.marginBottom = "10px";
+
+        childSelect.appendChild(
+            new Option("Seleccione un subtema", "")
+        );
+
+        // Insertar controles
+        
+        if (document.getElementById("help-topic-wrapper"))
+            return;
+
+        const wrapper = document.createElement("div");
+        wrapper.id = "help-topic-wrapper";
+
+        wrapper.appendChild(parentSelect);
+        wrapper.appendChild(childSelect);
+        
+        const container = topicSelect.parentNode;
+
+        container.appendChild(wrapper);
+
+
+        // Llenar temas principales desde la jerarquía real
+        Object.entries(parents).forEach(([id, topic]) => {
+
+            parentSelect.appendChild(
+                new Option(
+                    topic.topic,
+                    id
+                )
+            );
+
+        });
 
     const resetChildSelect = () => {
         childSelect.innerHTML = "";
@@ -136,7 +128,7 @@ async function initializeHelpTopicSplit() {
         topicSelect.value = value || "";
 
         if (window.jQuery) {
-        window.jQuery(topicSelect).trigger("change");
+            window.jQuery(topicSelect).trigger("change");
         } else {
             topicSelect.dispatchEvent(new Event("change"));
         }

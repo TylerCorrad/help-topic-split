@@ -1,24 +1,22 @@
 <?php
 require_once INCLUDE_DIR . 'class.plugin.php';
-require_once dirname(__FILE__) . '/class.HelpTopicSplitPlugin.php';
 
-define('HELP_TOPIC_SPLIT_LOG_DIR', sys_get_temp_dir());
 
-file_put_contents(
-    HELP_TOPIC_SPLIT_LOG_DIR . '/help-topic-config.log',
-    "config.php cargado\n",
-    FILE_APPEND);
-class HelpTopicSplitPluginConfig extends PluginConfig {
+class HelpTopicSplitConfig extends PluginConfig {
 
     function getOptions() {
-        return array(
-            'enable_plugin' => new BooleanField(array(
-                'label'     => ('activar división de temas de ayuda'),
-                'default' => true,
-            ))
-        );
-    }
+        return [
+            'general' => new SectionBreakField([
+                'label' => 'Configuración general',
+            ]),
 
+            'enable_subtopics' => new BooleanField([
+                'label' => 'Activar subcategorías',
+                'default' => true,
+                'hint' => 'Habilita el segundo dropdown',
+            ]),
+        ];
+    }
 
     function pre_save(&$config, &$errors) {
         file_put_contents(

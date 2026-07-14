@@ -3,13 +3,15 @@ Este plugin para osTicket tiene como objetivo dividir el menú desplegable de se
 El plugin inyecta código css y JavaScript a las plantillas php del sistema, por lo que requiere modificar el core del mismo de manera mínima.
 
 ---
+
+
 ## Compatibilidad
-Este plugin es compátible con la versión 1.18 de osTicket, si va a implementarlo en otras versiones hagalo con precaución.
+Este plugin es compátible con la versión 1.18 de osTicket, si va a implementarlo en otras verciones tenga precaución.
 
 ---
-## Instalación 
-Para implementar este plugin en su instancia de osTicket siga los siguientes pasos:
->>>>>>> 8287adc18efda9f0f315e667eaa10dc0d11d459f
+
+## Instalación
+Para implementar este plugin siga los siguientes pasos:
 
 ### Paso 1:
 descargue este proyecto y muevalo a la carpeta /include/plugins dentro de su instancia de osTicket
