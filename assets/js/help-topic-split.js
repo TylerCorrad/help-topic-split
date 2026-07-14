@@ -66,7 +66,6 @@ async function getTopics() {
         return null;
     }
 }
-
 async function initializeHelpTopicSplit() {
 
     const topics = await getTopics();
@@ -137,7 +136,7 @@ async function initializeHelpTopicSplit() {
         topicSelect.value = value || "";
 
         if (window.jQuery) {
-            window.jQuery(topicSelect).trigger("change");
+        window.jQuery(topicSelect).trigger("change");
         } else {
             topicSelect.dispatchEvent(new Event("change"));
         }
@@ -154,48 +153,41 @@ async function initializeHelpTopicSplit() {
         });
     };
 
-parentSelect.addEventListener("change", function () {
-    if (!this.value) {
-        resetChildSelect();
+    parentSelect.addEventListener("change", function () {
+        if (!this.value) {
+            resetChildSelect();
+            syncOriginalSelect("");
+            return;
+        }
+
+        populateChildSelect(this.value);
         syncOriginalSelect("");
-        return;
-    }
+    });
 
-    populateChildSelect(this.value);
+    childSelect.addEventListener("change", function () {
+        syncOriginalSelect(this.value);
 
-    // El tema padre ya es una selección válida por sí sola:
-    // dispara su cuestionario correspondiente de inmediato.
-    syncOriginalSelect(this.value);
-});
+        if (!this.value) {
+            console.info('HelpTopicSplit: subtema deseleccionado, campo original reiniciado.');
+            return;
+        }
 
-childSelect.addEventListener("change", function () {
-    if (!this.value) {
-        // Sin subtema elegido, se vuelve a usar el tema padre
-        console.info('HelpTopicSplit: subtema deseleccionado, volviendo al tema padre.');
-        syncOriginalSelect(parentSelect.value);
-        return;
-    }
-
-    syncOriginalSelect(this.value);
-    console.log("Subtema seleccionado:", this.value);
+        console.log("Subtema seleccionado:", this.value);
     });
 
     // Seleccionar valores iniciales si hay uno presente
     if (originalValue) {
-    const currentParent = Object.keys(children).find(parentId =>
-        children[parentId].some(child => child.id === originalValue)
-    );
+        const currentParent = Object.keys(children).find(parentId =>
+            children[parentId].some(child => child.id === originalValue)
+        );
 
-    if (currentParent) {
-        parentSelect.value = currentParent;
-        populateChildSelect(currentParent);
-        childSelect.value = originalValue;
-    } else if (parents[originalValue]) {
-        // El valor original es el tema padre mismo
-        parentSelect.value = originalValue;
-        populateChildSelect(originalValue);
+        if (currentParent) {
+            parentSelect.value = currentParent;
+            populateChildSelect(currentParent);
+            childSelect.value = originalValue;
+        }
     }
-}
+
     // Ocultar selector original solo después de preparar los nuevos controles.
     topicSelect.style.display = "none";
 };
